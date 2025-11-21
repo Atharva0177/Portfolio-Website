@@ -8,40 +8,6 @@ const Resume = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 })
 
   const resumeData = {
-    experience: [
-      {
-        title: 'DataLogger using Embedded Devices and Modbus',
-        company: 'Atlas Copco Project',
-        period: 'February 2024 - June 2024',
-        description: 'Developed a Datalogger system for mining trucks to obtain and visualize relevant data from connected sensors using Modbus TCP/IP and MQTT protocols.',
-        skills: ['Python', 'MySQL', 'PythonAnywhere', 'Postman', 'MQTT', 'Raspberry Pi', 'STM32'],
-        type: 'Project'
-      },
-      {
-        title: 'Real-Time Crime Detection & Crowd Management',
-        company: 'Smart India Hackathon 2023 - Team EnvisionAI',
-        period: 'September 2023 - March 2024',
-        description: 'Created an AI-powered app for Indian Railway Authorities to prevent crime, manage crowd congestion, and monitor work on railway stations using advanced ML architectures.',
-        skills: ['Python', 'HuggingFace', 'PyTorch', 'Gradio', 'ViViT', '3D CNNs', 'YOLO'],
-        type: 'Hackathon'
-      },
-      {
-        title: 'Smart Crime Detection using Existing CCTV Infrastructure',
-        company: 'eYantra Innovation Challenge 2023-24 - Team EnvisionAI',
-        period: 'September 2023 - March 2024',
-        description: 'Built a centralized database for authorities with alert systems, web app, and Android app for crime prevention using Vision Transformers.',
-        skills: ['Python', 'ViViT', 'PyTorch', 'Twilio', 'DynamoDB', 'MongoDB', 'Android Studio'],
-        type: 'Hackathon'
-      },
-      {
-        title: 'E-Waste Segregation with OpenCV using YOLOv8',
-        company: 'Independent Project',
-        period: 'March 2023 - July 2023',
-        description: 'Trained multiple YOLOv8 models (nano, small, medium, large, x-large) for multi-class E-waste classification and analyzed accuracy on Raspberry Pi 4b.',
-        skills: ['Python', 'OpenCV', 'YOLOv8', 'Jupyter', 'Raspberry Pi'],
-        type: 'Project'
-      }
-    ],
     education: [
       {
         degree: 'Bachelor of Technology',
@@ -104,6 +70,41 @@ const Resume = () => {
         skills: ['BrainyPi', 'IoT Interfaces']
       }
     ],
+    experience: [
+      {
+        title: 'DataLogger using Embedded Devices and Modbus',
+        company: 'Atlas Copco Project',
+        period: 'February 2024 - June 2024',
+        description: 'Developed a Datalogger system for mining trucks to obtain and visualize relevant data from connected sensors using Modbus TCP/IP and MQTT protocols.',
+        skills: ['Python', 'MySQL', 'PythonAnywhere', 'Postman', 'MQTT', 'Raspberry Pi', 'STM32'],
+        type: 'Project'
+      },
+      {
+        title: 'Real-Time Crime Detection & Crowd Management',
+        company: 'Smart India Hackathon 2023 - Team EnvisionAI',
+        period: 'September 2023 - March 2024',
+        description: 'Created an AI-powered app for Indian Railway Authorities to prevent crime, manage crowd congestion, and monitor work on railway stations using advanced ML architectures.',
+        skills: ['Python', 'HuggingFace', 'PyTorch', 'Gradio', 'ViViT', '3D CNNs', 'YOLO'],
+        type: 'Hackathon'
+      },
+      {
+        title: 'Smart Crime Detection using Existing CCTV Infrastructure',
+        company: 'eYantra Innovation Challenge 2023-24 - Team EnvisionAI',
+        period: 'September 2023 - March 2024',
+        description: 'Built a centralized database for authorities with alert systems, web app, and Android app for crime prevention using Vision Transformers.',
+        skills: ['Python', 'ViViT', 'PyTorch', 'Twilio', 'DynamoDB', 'MongoDB', 'Android Studio'],
+        type: 'Hackathon'
+      },
+      {
+        title: 'E-Waste Segregation with OpenCV using YOLOv8',
+        company: 'Independent Project',
+        period: 'March 2023 - July 2023',
+        description: 'Trained multiple YOLOv8 models (nano, small, medium, large, x-large) for multi-class E-waste classification and analyzed accuracy on Raspberry Pi 4b.',
+        skills: ['Python', 'OpenCV', 'YOLOv8', 'Jupyter', 'Raspberry Pi'],
+        type: 'Project'
+      }
+    ],
+    
     achievements: [
       {
         title: 'eYantra Innovation Challenge 2023-24',
@@ -156,28 +157,6 @@ const Resume = () => {
           </h2>
           <p className="text-gray-400 text-lg mb-8">Download or view my professional experience</p>
 
-          {/* Action Buttons */}
-          {/* <div className="flex flex-wrap gap-4 justify-center">
-            <motion.button
-              onClick={handleDownloadResume}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full font-semibold text-white shadow-lg flex items-center gap-2"
-            >
-              <FaDownload />
-              Download PDF
-            </motion.button>
-            <motion.button
-              onClick={handleViewResume}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-8 py-4 glass rounded-full font-semibold text-white flex items-center gap-2"
-            >
-              <FaEye />
-              View Online
-            </motion.button>
-          </div> */}
-
           {/* Contact Info */}
           <div className="mt-8 flex flex-wrap justify-center gap-6 text-sm text-gray-400">
             <div className="flex items-center gap-2">
@@ -200,109 +179,11 @@ const Resume = () => {
         </motion.div>
 
         <div className="grid lg:grid-cols-3 gap-8">
-          {/* Left Column - Projects & Experience */}
+          {/* Left Column - Education & Certifications (SWITCHED) */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ delay: 0.2 }}
-            className="lg:col-span-2 space-y-8"
-          >
-            {/* Projects */}
-            <div className="glass p-8 rounded-2xl">
-              <h3 className="text-2xl font-bold mb-8 flex items-center gap-2">
-                <FaBriefcase className="text-blue-400" />
-                Projects & Experience
-              </h3>
-
-              <div className="space-y-8">
-                {resumeData.experience.map((exp, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={inView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ delay: 0.3 + index * 0.1 }}
-                    className="relative"
-                  >
-                    {/* Timeline Line and Dot */}
-                    <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-blue-500/30">
-                      <div className="absolute top-2 -left-[7px] w-4 h-4 bg-blue-500 rounded-full border-4 border-gray-900" />
-                    </div>
-
-                    {/* Content */}
-                    <div className="pl-8">
-                      {/* Header */}
-                      <div className="mb-3">
-                        <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
-                          <h4 className="text-xl font-bold text-white pr-2">{exp.title}</h4>
-                          <div className="flex items-center gap-2 flex-shrink-0">
-                            <span className="text-xs px-3 py-1 rounded-full bg-purple-500/20 text-purple-400 border border-purple-500/30">
-                              {exp.type}
-                            </span>
-                          </div>
-                        </div>
-                        
-                        <p className="text-blue-400 font-semibold text-sm mb-1">{exp.company}</p>
-                        <p className="text-gray-500 text-sm">{exp.period}</p>
-                      </div>
-
-                      {/* Description */}
-                      <p className="text-gray-300 mb-4 leading-relaxed text-sm">{exp.description}</p>
-
-                      {/* Skills */}
-                      <div className="flex flex-wrap gap-2">
-                        {exp.skills.map((skill, i) => (
-                          <span
-                            key={i}
-                            className="px-3 py-1 text-xs rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30"
-                          >
-                            {skill}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-
-            {/* Achievements */}
-            <div className="glass p-8 rounded-2xl">
-              <h3 className="text-2xl font-bold mb-6 flex items-center gap-2">
-                <FaTrophy className="text-yellow-400" />
-                Achievements
-              </h3>
-
-              <div className="space-y-4">
-                {resumeData.achievements.map((achievement, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={inView ? { opacity: 1, x: 0 } : {}}
-                    transition={{ delay: 0.5 + index * 0.1 }}
-                    whileHover={{ scale: 1.02 }}
-                    className={`p-5 rounded-xl bg-gradient-to-r ${achievement.color} bg-opacity-10 border border-white/10`}
-                  >
-                    <div className="flex items-start gap-4">
-                      <div className="text-4xl flex-shrink-0">{achievement.icon}</div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex justify-between items-start gap-2 mb-1">
-                          <h4 className="font-bold text-white">{achievement.title}</h4>
-                          <span className="text-xs text-gray-400 whitespace-nowrap flex-shrink-0">{achievement.date}</span>
-                        </div>
-                        <p className="text-sm text-gray-300">{achievement.description}</p>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Right Column - Education & Certifications */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ delay: 0.4 }}
             className="space-y-8"
           >
             {/* Education */}
@@ -407,6 +288,104 @@ const Resume = () => {
               </div>
             </div>
           </motion.div>
+
+          {/* Right Column - Projects & Experience (SWITCHED) */}
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ delay: 0.4 }}
+            className="lg:col-span-2 space-y-8"
+          >
+            {/* Projects */}
+            <div className="glass p-8 rounded-2xl">
+              <h3 className="text-2xl font-bold mb-8 flex items-center gap-2">
+                <FaBriefcase className="text-blue-400" />
+                Projects & Experience
+              </h3>
+
+              <div className="space-y-8">
+                {resumeData.experience.map((exp, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={inView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ delay: 0.3 + index * 0.1 }}
+                    className="relative"
+                  >
+                    {/* Timeline Line and Dot */}
+                    <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-blue-500/30">
+                      <div className="absolute top-2 -left-[7px] w-4 h-4 bg-blue-500 rounded-full border-4 border-gray-900" />
+                    </div>
+
+                    {/* Content */}
+                    <div className="pl-8">
+                      {/* Header */}
+                      <div className="mb-3">
+                        <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
+                          <h4 className="text-xl font-bold text-white pr-2">{exp.title}</h4>
+                          <div className="flex items-center gap-2 flex-shrink-0">
+                            <span className="text-xs px-3 py-1 rounded-full bg-purple-500/20 text-purple-400 border border-purple-500/30">
+                              {exp.type}
+                            </span>
+                          </div>
+                        </div>
+                        
+                        <p className="text-blue-400 font-semibold text-sm mb-1">{exp.company}</p>
+                        <p className="text-gray-500 text-sm">{exp.period}</p>
+                      </div>
+
+                      {/* Description */}
+                      <p className="text-gray-300 mb-4 leading-relaxed text-sm">{exp.description}</p>
+
+                      {/* Skills */}
+                      <div className="flex flex-wrap gap-2">
+                        {exp.skills.map((skill, i) => (
+                          <span
+                            key={i}
+                            className="px-3 py-1 text-xs rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30"
+                          >
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
+            {/* Achievements */}
+            <div className="glass p-8 rounded-2xl">
+              <h3 className="text-2xl font-bold mb-6 flex items-center gap-2">
+                <FaTrophy className="text-yellow-400" />
+                Achievements
+              </h3>
+
+              <div className="space-y-4">
+                {resumeData.achievements.map((achievement, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={inView ? { opacity: 1, x: 0 } : {}}
+                    transition={{ delay: 0.5 + index * 0.1 }}
+                    whileHover={{ scale: 1.02 }}
+                    className={`p-5 rounded-xl bg-gradient-to-r ${achievement.color} bg-opacity-10 border border-white/10`}
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className="text-4xl flex-shrink-0">{achievement.icon}</div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex justify-between items-start gap-2 mb-1">
+                          <h4 className="font-bold text-white">{achievement.title}</h4>
+                          <span className="text-xs text-gray-400 whitespace-nowrap flex-shrink-0">{achievement.date}</span>
+                        </div>
+                        <p className="text-sm text-gray-300">{achievement.description}</p>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
         </div>
 
         {/* Bottom CTA */}
@@ -451,12 +430,8 @@ const Resume = () => {
               <FaCode />
               View GitHub Profile
             </motion.a>
-            
-            
           </div>
-          
         </motion.div>
-        
       </div>
 
       {/* Custom Scrollbar Styles */}

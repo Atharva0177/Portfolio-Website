@@ -13,8 +13,8 @@ export default function Home() {
       <Hero />
       <About />
       <Projects />
-      <Skills />
       <Resume />
+      <Skills />
       <GitHubActivity />
       {/* <SpotifyPlayer /> */}
       <Contact />
