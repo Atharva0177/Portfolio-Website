@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { TypeAnimation } from 'react-type-animation'
-import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa'
+import { FaGithub, FaInstagram, FaLinkedin, FaTwitter } from 'react-icons/fa'
 import { HiArrowDown } from 'react-icons/hi'
 
 const Hero = () => {
@@ -99,8 +99,8 @@ const Hero = () => {
         <motion.div variants={itemVariants} className="flex gap-6 justify-center">
           {[
             { icon: FaGithub, url: 'https://github.com/Atharva0177', color: 'hover:text-gray-400' },
-            { icon: FaLinkedin, url: '#', color: 'hover:text-blue-400' },
-            { icon: FaTwitter, url: '#', color: 'hover:text-sky-400' },
+            { icon: FaLinkedin, url: 'https://www.linkedin.com/in/atharva-mandavkar-b66b94179', color: 'hover:text-blue-400' },
+            { icon: FaInstagram, url: 'https://www.instagram.com/atharva__177/', color: 'hover:text-pink-400' },
           ].map((social, index) => (
             <motion.a
               key={index}
