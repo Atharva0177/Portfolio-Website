@@ -25,7 +25,7 @@ export default function RootLayout({
         {/* <CustomCursor /> */}
         <Navbar />
         <main>{children}</main>
-        <SpotifyPlayer />
+        {/* <SpotifyPlayer /> */}
       </body>
     </html>
   )
