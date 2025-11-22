@@ -96,7 +96,7 @@ const Projects = () => {
           className="text-center mt-12"
         >
           <motion.a
-            href="https://github.com/Atharva0177"
+            href="https://github.com/Atharva0177?tab=repositories"
             target="_blank"
             rel="noopener noreferrer"
             whileHover={{ scale: 1.05 }}
