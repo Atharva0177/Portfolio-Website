@@ -13,7 +13,7 @@ const Resume = () => {
         degree: 'Bachelor of Technology',
         field: 'Electronics and Communication Engineering',
         institution: 'Dr Vishwanath Karad MIT World Peace University, Pune',
-        period: 'August 2019 - March 2025',
+        period: 'June 2021 - March 2025',
         grade: 'CGPA: 8.85/10',
         rollNo: '1032211830'
       },
