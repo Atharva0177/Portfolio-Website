@@ -206,7 +206,7 @@ const SpotifyPlayer = () => {
         >
           <motion.div
             whileHover={{ scale: 1.02 }}
-            className="glass rounded-2xl p-4 w-80 shadow-2xl border border-white/10 backdrop-blur-xl"
+            className="glass rounded-2xl p-4 w-80 shadow-2xl border border-gray-300 dark:border-white/10 backdrop-blur-xl"
           >
             {/* Header */}
             <div className="flex items-center justify-between mb-3">

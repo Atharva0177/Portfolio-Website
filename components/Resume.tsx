@@ -107,6 +107,13 @@ const Resume = () => {
     
     achievements: [
       {
+        title: 'Patent Published: AI-Driven Crime Detection',
+        description: 'Published Indian Patent (Publication No: 03/2026) for AI-driven surveillance system using existing CCTV networks with ML & video transformers',
+        date: 'January 2026',
+        icon: '📜',
+        color: 'from-purple-500 to-pink-500'
+      },
+      {
         title: 'eYantra Innovation Challenge 2023-24',
         description: 'Best Implementation Award at National Finals',
         date: 'April 2024',
@@ -200,7 +207,7 @@ const Resume = () => {
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={inView ? { opacity: 1, scale: 1 } : {}}
                     transition={{ delay: 0.5 + index * 0.1 }}
-                    className="bg-white/5 p-4 rounded-lg border border-white/10 hover:border-purple-500/30 transition-colors"
+                    className="p-3 bg-gray-100 dark:bg-white/5 rounded-lg cursor-pointer border border-gray-300 dark:border-white/5 hover:border-green-500/30 transition-all"
                   >
                     <h4 className="font-bold text-base text-white mb-1">{edu.degree}</h4>
                     {edu.field && <p className="text-purple-400 font-semibold text-sm mb-2">{edu.field}</p>}
@@ -232,7 +239,7 @@ const Resume = () => {
                     animate={inView ? { opacity: 1, x: 0 } : {}}
                     transition={{ delay: 0.6 + index * 0.05 }}
                     whileHover={{ x: 5 }}
-                    className="p-3 bg-white/5 rounded-lg cursor-pointer border border-white/5 hover:border-green-500/30 transition-all"
+                    className="p-3 bg-gray-100 dark:bg-white/5 rounded-lg cursor-pointer border border-gray-300 dark:border-white/5 hover:border-green-500/30 transition-all"
                   >
                     <div className="flex items-start gap-3">
                       <div className="w-2 h-2 bg-green-400 rounded-full flex-shrink-0 mt-2" />
@@ -369,16 +376,16 @@ const Resume = () => {
                     animate={inView ? { opacity: 1, x: 0 } : {}}
                     transition={{ delay: 0.5 + index * 0.1 }}
                     whileHover={{ scale: 1.02 }}
-                    className={`p-5 rounded-xl bg-gradient-to-r ${achievement.color} bg-opacity-10 border border-white/10`}
+                    className={`p-5 rounded-xl bg-gradient-to-r ${achievement.color} bg-opacity-10 border border-gray-300 dark:border-white/10`}
                   >
                     <div className="flex items-start gap-4">
                       <div className="text-4xl flex-shrink-0">{achievement.icon}</div>
                       <div className="flex-1 min-w-0">
                         <div className="flex justify-between items-start gap-2 mb-1">
                           <h4 className="font-bold text-white">{achievement.title}</h4>
-                          <span className="text-xs text-gray-400 whitespace-nowrap flex-shrink-0">{achievement.date}</span>
+                          <span className="text-xs text-gray-300 whitespace-nowrap flex-shrink-0">{achievement.date}</span>
                         </div>
-                        <p className="text-sm text-gray-300">{achievement.description}</p>
+                        <p className="text-sm text-white">{achievement.description}</p>
                       </div>
                     </div>
                   </motion.div>

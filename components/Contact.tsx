@@ -17,22 +17,42 @@ const Contact = () => {
     subject: '',
     message: ''
   })
-  const [status, setStatus] = React.useState('')
+  const [status, setStatus] = React.useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
+  const [errorMessage, setErrorMessage] = React.useState('')
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
     setStatus('sending')
+    setErrorMessage('')
 
-    // Create mailto link
-    const mailtoLink = `mailto:mandavkaratharva@gmail.com?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\n\n${formData.message}`)}`
-    
-    window.location.href = mailtoLink
-    
-    setStatus('sent')
-    setTimeout(() => {
-      setStatus('')
-      setFormData({ name: '', email: '', subject: '', message: '' })
-    }, 3000)
+    try {
+      // Submit directly to Web3Forms (works in browser, not blocked by Cloudflare)
+      const form = event.currentTarget
+      const formDataToSend = new FormData(form)
+      
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: formDataToSend
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        setStatus('sent')
+        setFormData({ name: '', email: '', subject: '', message: '' })
+        form.reset()
+        setTimeout(() => {
+          setStatus('idle')
+        }, 5000)
+      } else {
+        setStatus('error')
+        setErrorMessage(data.message || 'Failed to send message. Please try again.')
+      }
+    } catch (error) {
+      setStatus('error')
+      setErrorMessage('Network error. Please check your connection and try again.')
+      console.error('Form submission error:', error)
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -136,6 +156,13 @@ const Contact = () => {
             className="glass p-8 rounded-2xl"
           >
             <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Hidden field for Web3Forms access key */}
+              <input 
+                type="hidden" 
+                name="access_key" 
+                value={process.env.NEXT_PUBLIC_WEB3FORMS_KEY || ''} 
+              />
+              
               <div>
                 <label className="block text-sm font-medium mb-2">Name</label>
                 <input
@@ -144,7 +171,7 @@ const Contact = () => {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-blue-500 transition-colors"
+                  className="w-full px-4 py-3 bg-white dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-lg focus:outline-none focus:border-blue-500 transition-colors text-gray-900 dark:text-white"
                   placeholder="Your name"
                 />
               </div>
@@ -157,7 +184,7 @@ const Contact = () => {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-blue-500 transition-colors"
+                  className="w-full px-4 py-3 bg-white dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-lg focus:outline-none focus:border-blue-500 transition-colors text-gray-900 dark:text-white"
                   placeholder="your.email@example.com"
                 />
               </div>
@@ -170,7 +197,7 @@ const Contact = () => {
                   value={formData.subject}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-blue-500 transition-colors"
+                  className="w-full px-4 py-3 bg-white dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-lg focus:outline-none focus:border-blue-500 transition-colors text-gray-900 dark:text-white"
                   placeholder="How can I help?"
                 />
               </div>
@@ -183,7 +210,7 @@ const Contact = () => {
                   onChange={handleChange}
                   required
                   rows={5}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-blue-500 transition-colors resize-none"
+                  className="w-full px-4 py-3 bg-white dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-lg focus:outline-none focus:border-blue-500 transition-colors resize-none text-gray-900 dark:text-white"
                   placeholder="Your message..."
                 />
               </div>
@@ -192,19 +219,41 @@ const Contact = () => {
                 <motion.div
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="p-4 bg-green-500/20 border border-green-500/50 rounded-lg text-green-400 text-center"
+                  className="p-4 bg-green-500/20 border border-green-500/50 rounded-lg text-green-400 text-center flex items-center justify-center gap-2"
                 >
-                  Message sent successfully!
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Message sent successfully! I'll get back to you soon.
+                </motion.div>
+              )}
+
+              {status === 'error' && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="p-4 bg-red-500/20 border border-red-500/50 rounded-lg text-red-400 text-center flex items-center justify-center gap-2"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                  {errorMessage}
                 </motion.div>
               )}
 
               <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={{ scale: status === 'sending' ? 1 : 1.02 }}
+                whileTap={{ scale: status === 'sending' ? 1 : 0.98 }}
                 type="submit"
                 disabled={status === 'sending'}
-                className="w-full px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg font-semibold text-white shadow-lg hover:shadow-blue-500/50 transition-shadow disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg font-semibold text-white shadow-lg hover:shadow-blue-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
+                {status === 'sending' && (
+                  <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                )}
                 {status === 'sending' ? 'Sending...' : 'Send Message'}
               </motion.button>
             </form>

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import Navbar from '@/components/Navbar'
+import ScrollProgress from '@/components/ScrollProgress'
 // import CustomCursor from '@/components/CustomCursor'
 import SpotifyPlayer from '@/components/SpotifyPlayer'
 
@@ -22,6 +23,7 @@ export default function RootLayout({
     <html lang="en">
       {/* Removed className="dark" from here */}
       <body className={`${inter.className} min-h-screen transition-colors duration-300`}>
+        <ScrollProgress />
         {/* <CustomCursor /> */}
         <Navbar />
         <main>{children}</main>
