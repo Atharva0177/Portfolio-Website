@@ -2,11 +2,31 @@
 
 import { motion } from 'framer-motion'
 import { TypeAnimation } from 'react-type-animation'
-import { FaGithub, FaInstagram, FaLinkedin, FaTwitter } from 'react-icons/fa'
-import { HiArrowDown } from 'react-icons/hi'
+import { FaGithub, FaInstagram, FaLinkedin } from 'react-icons/fa'
 import ParticleBackground from './ParticleBackground'
 
-const Hero = () => {
+interface HeroContent {
+  greeting: string
+  name: string
+  taglines: string[]
+  bio: string
+  ctaButtons: { label: string; href: string; primary: boolean }[]
+  socialLinks: { platform: string; url: string }[]
+}
+
+const SOCIAL_ICONS: Record<string, any> = {
+  github: FaGithub,
+  linkedin: FaLinkedin,
+  instagram: FaInstagram,
+}
+
+const SOCIAL_COLORS: Record<string, string> = {
+  github: 'hover:text-gray-400',
+  linkedin: 'hover:text-blue-400',
+  instagram: 'hover:text-pink-400',
+}
+
+const Hero = ({ content }: { content: HeroContent }) => {
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -21,6 +41,9 @@ const Hero = () => {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 },
   }
+
+  // Build the TypeAnimation sequence from taglines
+  const typeSequence = content.taglines.flatMap(t => [t, 2000])
 
   return (
     <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden pt-20">
@@ -39,7 +62,7 @@ const Hero = () => {
       >
         <motion.div variants={itemVariants} className="mb-6">
           <span className="px-4 py-2 rounded-full glass text-sm text-blue-400 font-semibold">
-            👋 Welcome to my portfolio
+            {content.greeting}
           </span>
         </motion.div>
 
@@ -47,22 +70,13 @@ const Hero = () => {
           variants={itemVariants}
           className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6"
         >
-          Hi, I'm{' '}
-          <span className="gradient-text">Atharva</span>
+          Hi, I&apos;m{' '}
+          <span className="gradient-text">{content.name}</span>
         </motion.h1>
 
         <motion.div variants={itemVariants} className="text-2xl md:text-4xl mb-8 h-20">
           <TypeAnimation
-            sequence={[
-              'Full Stack Developer 🚀',
-              2000,
-              'Machine Learning Engineer 🤖',
-              2000,
-              'Problem Solver 💡',
-              2000,
-              'Tech Explorer 🌟',
-              2000,
-            ]}
+            sequence={typeSequence}
             wrapper="span"
             speed={50}
             repeat={Infinity}
@@ -74,59 +88,50 @@ const Hero = () => {
           variants={itemVariants}
           className="text-lg md:text-xl text-gray-300 mb-12 max-w-3xl mx-auto"
         >
-          Passionate developer from Pune, crafting beautiful and functional web experiences.
-          Turning ideas into reality with clean code and modern design.
+          {content.bio}
         </motion.p>
 
         <motion.div variants={itemVariants} className="flex gap-6 justify-center mb-12">
-          <motion.a
-            href="#contact"
-            whileHover={{ scale: 1.05, boxShadow: '0 0 25px rgba(59, 130, 246, 0.5)' }}
-            whileTap={{ scale: 0.95 }}
-            className="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full font-semibold text-white shadow-lg"
-          >
-            Get In Touch
-          </motion.a>
-          <motion.a
-            href="#projects"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-8 py-4 glass rounded-full font-semibold text-white"
-          >
-            View Projects
-          </motion.a>
+          {content.ctaButtons.map((btn, i) => (
+            <motion.a
+              key={i}
+              href={btn.href}
+              whileHover={{ scale: 1.05, ...(btn.primary ? { boxShadow: '0 0 25px rgba(59, 130, 246, 0.5)' } : {}) }}
+              whileTap={{ scale: 0.95 }}
+              className={`px-8 py-4 rounded-full font-semibold ${btn.primary
+                  ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'
+                  : 'glass text-white'
+                }`}
+            >
+              {btn.label}
+            </motion.a>
+          ))}
         </motion.div>
 
         <motion.div variants={itemVariants} className="flex gap-6 justify-center">
-          {[
-            { icon: FaGithub, url: 'https://github.com/Atharva0177', color: 'hover:text-gray-400' },
-            { icon: FaLinkedin, url: 'https://www.linkedin.com/in/atharva-mandavkar-b66b94179', color: 'hover:text-blue-400' },
-            { icon: FaInstagram, url: 'https://www.instagram.com/atharva__177/', color: 'hover:text-pink-400' },
-          ].map((social, index) => (
-            <motion.a
-              key={index}
-              href={social.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ scale: 1.2, rotate: 5 }}
-              whileTap={{ scale: 0.9 }}
-              className={`p-3 glass rounded-full text-white transition-colors ${social.color}`}
-            >
-              <social.icon size={24} />
-            </motion.a>
-          ))}
+          {content.socialLinks.map((social, index) => {
+            const Icon = SOCIAL_ICONS[social.platform] || FaGithub
+            const color = SOCIAL_COLORS[social.platform] || 'hover:text-gray-400'
+            return (
+              <motion.a
+                key={index}
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.2, rotate: 5 }}
+                whileTap={{ scale: 0.9 }}
+                className={`p-3 glass rounded-full text-white transition-colors ${color}`}
+              >
+                <Icon size={24} />
+              </motion.a>
+            )
+          })}
         </motion.div>
 
         <motion.div
           variants={itemVariants}
           className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
         >
-          {/* <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-          >
-            <HiArrowDown className="text-4xl text-blue-400" />
-          </motion.div> */}
         </motion.div>
       </motion.div>
     </section>

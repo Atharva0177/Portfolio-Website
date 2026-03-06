@@ -11,14 +11,13 @@ interface Contribution {
   level: number
 }
 
-interface RepositoryActivity {
-  name: string
-  commits: number
-  language: string
+interface Project {
+  title: string
+  tech: string[]
   color: string
 }
 
-const GitHubActivity = () => {
+const GitHubActivity = ({ githubUrl = '#', projects = [] }: { githubUrl?: string, projects?: Project[] }) => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 })
   const [contributions, setContributions] = useState<Contribution[]>([])
   const [totalContributions, setTotalContributions] = useState(0)
@@ -26,13 +25,12 @@ const GitHubActivity = () => {
   const [selectedPeriod, setSelectedPeriod] = useState<string | null>(null)
   const [expandedMonth, setExpandedMonth] = useState<string | null>(null)
 
-  const topRepositories: RepositoryActivity[]  = [
-    { name: 'Sign-to-Text-Language', commits: 125, language: 'Python', color: 'from-violet-500 to-purple-600' },
-    { name: 'NAS-Network-Attached-Storage', commits: 98, language: 'Python', color: 'from-slate-600 to-gray-800' },
-    { name: 'Real-Estate-Website', commits: 76, language: 'Python', color: 'from-cyan-500 to-blue-600' },
-    { name: 'Secure-Vault-Pro', commits: 64, language: 'Python', color: 'from-blue-500 to-teal-600' },
-    { name: 'Web-AirDrop', commits: 52, language: 'Python', color: 'from-green-500 to-teal-600' },
-  ]
+  const topRepositories = projects.slice(0, 5).map(p => ({
+    name: p.title,
+    commits: Math.floor(Math.random() * 100) + 20, // Mock stats for visual padding
+    language: p.tech[0] || 'Unknown',
+    color: p.color || 'from-gray-500 to-gray-700'
+  }))
 
   useEffect(() => {
     if (inView) {
@@ -64,7 +62,7 @@ const GitHubActivity = () => {
       date.setDate(date.getDate() - i)
       const count = Math.floor(Math.random() * 15)
       total += count
-      
+
       let level = 0
       if (count > 0) level = 1
       if (count > 3) level = 2
@@ -132,7 +130,7 @@ const GitHubActivity = () => {
 
   const getMonthlyData = () => {
     const months: { [key: string]: { contributions: number, days: number } } = {}
-    
+
     contributions.forEach(contribution => {
       const monthKey = contribution.date.substring(0, 7) // YYYY-MM
       if (!months[monthKey]) {
@@ -141,7 +139,7 @@ const GitHubActivity = () => {
       months[monthKey].contributions += contribution.count
       months[monthKey].days++
     })
-    
+
     return Object.entries(months).slice(-6) // Last 6 months
   }
 
@@ -269,7 +267,7 @@ const GitHubActivity = () => {
                         >
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                              <div className={`w-3 h-3 rounded-full bg-gradient-to-r ${repo.color}`} />
+                              <div className={`w-3 h-3 rounded-full bg-gradient-to-r ${repo.color.replace('text-', 'from-').replace('border-', 'to-')}`} />
                               <div>
                                 <h5 className="font-semibold text-white">{repo.name}</h5>
                                 <p className="text-xs text-gray-400">{repo.language}</p>
@@ -355,7 +353,7 @@ const GitHubActivity = () => {
             {/* Link to GitHub */}
             <div className="text-center mt-6">
               <motion.a
-                href="https://github.com/Atharva0177"
+                href={githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.05 }}

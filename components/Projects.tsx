@@ -3,9 +3,18 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa'
-import { projects } from '@/lib/data'
 
-const Projects = () => {
+interface Project {
+  id: number
+  title: string
+  description: string
+  image: string
+  tech: string[]
+  github: string
+  color: string
+}
+
+const Projects = ({ content, githubUrl = '#' }: { content: Project[]; githubUrl?: string }) => {
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -27,7 +36,7 @@ const Projects = () => {
         </motion.div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project, index) => (
+          {content.map((project, index) => (
             <motion.div
               key={project.id}
               initial={{ opacity: 0, y: 50 }}
@@ -73,16 +82,6 @@ const Projects = () => {
                   >
                     <FaGithub /> Code
                   </motion.a>
-                  {/* <motion.a
-                    // href={project.demo}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors"
-                  >
-                    <FaExternalLinkAlt /> Demo
-                  </motion.a> */}
                 </div>
               </div>
             </motion.div>
@@ -96,7 +95,7 @@ const Projects = () => {
           className="text-center mt-12"
         >
           <motion.a
-            href="https://github.com/Atharva0177?tab=repositories"
+            href={githubUrl ? `${githubUrl}?tab=repositories` : '#'}
             target="_blank"
             rel="noopener noreferrer"
             whileHover={{ scale: 1.05 }}

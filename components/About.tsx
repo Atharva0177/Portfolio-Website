@@ -7,6 +7,22 @@ import { FaCode, FaRocket, FaUsers, FaAward, FaGraduationCap, FaTrophy, FaGithub
 
 import { useEffect, useState } from 'react'
 
+const ICON_MAP: Record<string, any> = {
+  FaCode, FaRocket, FaUsers, FaAward, FaGraduationCap, FaTrophy, FaGithub, FaLinkedin, FaEnvelope, FaPhone, FaMapMarkerAlt, FaBriefcase, FaStar, FaFire,
+}
+
+const SOCIAL_ICONS: Record<string, any> = {
+  github: FaGithub,
+  linkedin: FaLinkedin,
+  email: FaEnvelope,
+}
+
+const SOCIAL_COLORS: Record<string, string> = {
+  github: 'hover:text-gray-400',
+  linkedin: 'hover:text-blue-400',
+  email: 'hover:text-red-400',
+}
+
 const AnimatedCounter = ({ value, duration = 2 }: { value: string; duration?: number }) => {
   const [count, setCount] = useState('0')
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.5 })
@@ -53,88 +69,23 @@ const AnimatedCounter = ({ value, duration = 2 }: { value: string; duration?: nu
   return <span ref={ref}>{count}</span>
 }
 
-const About = () => {
+const About = ({ content }: { content: any }) => {
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
   })
 
-  const stats = [
-    { icon: FaCode, label: 'Projects Completed', value: '10+', color: 'text-blue-400' },
-    { icon: FaTrophy, label: 'Hackathons Won', value: '3', color: 'text-yellow-400' },
-    { icon: FaAward, label: 'Patents Filed', value: '1', color: 'text-green-400' },
-    { icon: FaGraduationCap, label: 'CGPA', value: '8.85', color: 'text-purple-400' },
-  ]
-
-  const education = [
-    {
-      degree: 'B.Tech in Electronics & Communication',
-      institution: 'MIT World Peace University, Pune',
-      period: 'August 2019 - March 2025',
-      grade: 'CGPA: 8.85/10',
-      color: 'from-blue-500 to-cyan-500'
-    },
-    {
-      degree: 'Higher Secondary Education (12th)',
-      institution: 'Namo Rims Jr. College, Pune',
-      period: 'August 2019 - July 2021',
-      grade: '91.50%',
-      color: 'from-purple-500 to-pink-500'
-    },
-    {
-      degree: 'Secondary Education (10th)',
-      institution: 'Sacred Heart Convent High School',
-      period: 'Completed',
-      grade: '93.20%',
-      color: 'from-green-500 to-teal-500'
-    }
-  ]
-
-  const expertise = [
-    {
-      title: 'Machine Learning & AI',
-      description: 'Deep Learning, Computer Vision, NLP',
-      icon: '🤖',
-      skills: ['PyTorch', 'TensorFlow', 'YOLOv8', 'ViViT', 'HuggingFace']
-    },
-    {
-      title: 'Programming',
-      description: 'Multiple languages & frameworks',
-      icon: '💻',
-      skills: ['Python', 'C/C++', 'MATLAB', 'R', 'HTML/CSS']
-    },
-    {
-      title: 'Cloud & Databases',
-      description: 'AWS & Database Management',
-      icon: '☁️',
-      skills: ['AWS DynamoDB', 'MySQL', 'MongoDB', 'PythonAnywhere']
-    },
-    {
-      title: 'IoT & Embedded Systems',
-      description: 'Hardware integration & protocols',
-      icon: '🔧',
-      skills: ['Raspberry Pi', 'STM32', 'Modbus', 'MQTT', 'OpenCV']
-    }
-  ]
-
-  const socialLinks = [
-    { icon: FaGithub, url: 'https://github.com/Atharva0177', label: 'GitHub', color: 'hover:text-gray-400' },
-    { icon: FaLinkedin, url: 'https://linkedin.com/in/atharva-mandavkar', label: 'LinkedIn', color: 'hover:text-blue-400' },
-    { icon: FaEnvelope, url: 'mailto:mandavkaratharva@gmail.com', label: 'Email', color: 'hover:text-red-400' },
-  ]
-
-  const topSkills = [
-    { name: 'Python', level: 95, color: 'bg-blue-500' },
-    { name: 'Machine Learning', level: 90, color: 'bg-green-500' },
-    { name: 'IoT & Embedded', level: 85, color: 'bg-purple-500' },
-    { name: 'Cloud (AWS)', level: 80, color: 'bg-yellow-500' },
-  ]
-
-  const languages = [
-    { name: 'English', level: 'Fluent' },
-    { name: 'Hindi', level: 'Native' },
-    { name: 'Marathi', level: 'Native' },
-  ]
+  const stats = content.stats.map((s: any) => ({ ...s, icon: ICON_MAP[s.icon] || FaCode }))
+  const education = content.education
+  const expertise = content.expertise
+  const socialLinks = content.socialLinks.map((s: any) => ({
+    icon: SOCIAL_ICONS[s.platform] || FaGithub,
+    url: s.url,
+    label: s.label || s.platform,
+    color: SOCIAL_COLORS[s.platform] || 'hover:text-gray-400',
+  }))
+  const topSkills = content.topSkills
+  const languages = content.languages
 
   return (
     <section id="about" className="py-12 relative overflow-hidden">
@@ -149,12 +100,12 @@ const About = () => {
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
             About <span className="gradient-text">Me</span>
           </h2>
-          <p className="text-gray-400 text-lg">Electronics Engineer | AI-ML Enthusiast | Problem Solver</p>
+          <p className="text-gray-400 text-lg">{content.subtitle}</p>
         </motion.div>
 
         {/* Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
-          {stats.map((stat, index) => (
+          {stats.map((stat: any, index: number) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 50 }}
@@ -201,8 +152,8 @@ const About = () => {
                 {/* Profile Image */}
                 <div className="absolute inset-0 m-1">
                   <Image
-                    src="https://github.com/Atharva0177.png"
-                    alt="Atharva Mandavkar"
+                    src={content.profileImage}
+                    alt={content.fullName}
                     width={192}
                     height={192}
                     className="rounded-full object-cover w-full h-full"
@@ -222,17 +173,17 @@ const About = () => {
 
             {/* Name & Title */}
             <div className="text-center mb-4">
-              <h3 className="text-2xl font-bold mb-2 gradient-text">Atharva Mandavkar</h3>
-              <p className="text-gray-400 text-sm mb-1">B.Tech ECE | MIT WPU</p>
+              <h3 className="text-2xl font-bold mb-2 gradient-text">{content.fullName}</h3>
+              <p className="text-gray-400 text-sm mb-1">{content.title}</p>
               <p className="text-green-400 text-sm flex items-center justify-center gap-2">
                 <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                Available for opportunities
+                {content.availability}
               </p>
             </div>
 
             {/* Social Links */}
             <div className="flex justify-center gap-4 mb-4">
-              {socialLinks.map((social, index) => (
+              {socialLinks.map((social: any, index: number) => (
                 <motion.a
                   key={index}
                   href={social.url}
@@ -252,15 +203,15 @@ const About = () => {
             <div className="space-y-3 mb-4">
               <div className="flex items-center gap-3 text-sm p-3 bg-gray-100 dark:bg-white/5 rounded-lg border border-gray-300 dark:border-white/10">
                 <FaMapMarkerAlt className="text-pink-400 text-lg flex-shrink-0" />
-                <span className="text-gray-700 dark:text-gray-300">Pune, Maharashtra</span>
+                <span className="text-gray-700 dark:text-gray-300">{content.location}</span>
               </div>
               <div className="flex items-center gap-3 text-sm p-3 bg-gray-100 dark:bg-white/5 rounded-lg border border-gray-300 dark:border-white/10">
                 <FaGraduationCap className="text-purple-400 text-lg flex-shrink-0" />
-                <span className="text-gray-700 dark:text-gray-300">Graduated March 2025</span>
+                <span className="text-gray-700 dark:text-gray-300">{content.graduationDate}</span>
               </div>
               <div className="flex items-center gap-3 text-sm p-3 bg-gray-100 dark:bg-white/5 rounded-lg border border-gray-300 dark:border-white/10">
                 <FaBriefcase className="text-blue-400 text-lg flex-shrink-0" />
-                <span className="text-gray-700 dark:text-gray-300">Open to Work</span>
+                <span className="text-gray-700 dark:text-gray-300">{content.workStatus}</span>
               </div>
             </div>
 
@@ -271,7 +222,7 @@ const About = () => {
                 <h4 className="font-bold text-white">Top Skills</h4>
               </div>
               <div className="space-y-2">
-                {topSkills.map((skill, index) => (
+                {topSkills.map((skill: any, index: number) => (
                   <motion.div
                     key={index}
                     initial={{ opacity: 0, x: -20 }}
@@ -292,8 +243,8 @@ const About = () => {
                 <span className="text-xl">🌐</span>
                 <h4 className="font-bold text-white">Languages</h4>
               </div>
-              <div className="space-y-2">
-                {languages.map((lang, index) => (
+              <div className="space-y-6 flex-grow">
+                {languages.map((lang: any, index: number) => (
                   <motion.div
                     key={index}
                     initial={{ opacity: 0, x: -20 }}
@@ -318,57 +269,27 @@ const About = () => {
           >
             <h3 className="text-3xl font-bold mb-6 gradient-text">Who I Am</h3>
             <div className="space-y-4 text-gray-300 leading-relaxed flex-grow">
-              <p>
-                👋 Hi! I'm <span className="text-white font-semibold">Atharva Mandavkar</span>,
-                a passionate Electronics and Communication Engineering student from
-                <span className="text-blue-400"> MIT World Peace University, Pune</span>,
-                graduating in March 2025.
-              </p>
-              <p>
-                🚀 I specialize in <span className="text-green-400 font-semibold">Machine Learning</span>,
-                <span className="text-purple-400 font-semibold"> Computer Vision</span>, and
-                <span className="text-yellow-400 font-semibold"> IoT Systems</span>.
-                My journey has been driven by a desire to solve real-world problems using AI and embedded technologies.
-              </p>
-              <p>
-                🏆 I've had the privilege of winning multiple national hackathons including
-                <span className="text-yellow-400 font-semibold"> Smart India Hackathon 2023</span> and
-                <span className="text-blue-400 font-semibold"> eYantra Innovation Challenge 2023-24</span>,
-                where our team won the Best Implementation Award at the National Finals.
-              </p>
-              <p>
-                🤖 Recently achieved a significant milestone with a <span className="text-purple-400 font-semibold">published patent</span> on
-                <span className="text-cyan-400 font-semibold"> "AI-Driven Crime Detection using Existing CCTV Networks"</span> (Publication No: 03/2026).
-                The system leverages advanced machine learning and video transformers to enhance surveillance with real-time anomaly detection and intelligent alerting.
-              </p>
-              <p>
-                💡 My expertise lies in developing end-to-end AI-ML solutions—from training deep learning models
-                using <span className="text-pink-400">PyTorch</span> and <span className="text-orange-400">YOLOv8</span>
-                to deploying them on edge devices like Raspberry Pi and STM32 microcontrollers.
-              </p>
-              <p>
-                🎯 When I'm not coding, I'm exploring new technologies, participating in workshops,
-                or contributing to innovative projects that make a difference. I believe in continuous
-                learning and pushing the boundaries of what's possible with technology.
-              </p>
+              {content.bio.map((paragraph: string, i: number) => (
+                <p key={i} dangerouslySetInnerHTML={{ __html: paragraph }} />
+              ))}
             </div>
 
             {/* Contact Info - At Bottom */}
             <div className="mt-6 pt-6 border-t border-gray-300 dark:border-white/10">
               <div className="grid grid-cols-1 gap-3">
                 <a
-                  href="mailto:mandavkaratharva@gmail.com"
+                  href={`mailto:${content.email}`}
                   className="flex items-center gap-3 text-sm p-3 bg-gray-100 dark:bg-white/5 rounded-lg border border-gray-300 dark:border-white/10 hover:bg-gray-200 dark:hover:bg-white/10 transition-colors group"
                 >
                   <FaEnvelope className="text-blue-400 text-lg flex-shrink-0" />
-                  <span className="text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white truncate">mandavkaratharva@gmail.com</span>
+                  <span className="text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white truncate">{content.email}</span>
                 </a>
                 <a
-                  href="tel:+917972326112"
+                  href={`tel:${content.phone}`}
                   className="flex items-center gap-3 text-sm p-3 bg-gray-100 dark:bg-white/5 rounded-lg border border-gray-300 dark:border-white/10 hover:bg-gray-200 dark:hover:bg-white/10 transition-colors group"
                 >
                   <FaPhone className="text-green-400 text-lg flex-shrink-0" />
-                  <span className="text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white">+91 7972326112</span>
+                  <span className="text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white">{content.phone}</span>
                 </a>
               </div>
             </div>
@@ -384,7 +305,7 @@ const About = () => {
         >
           <h3 className="text-2xl font-bold mb-8 text-center gradient-text">Areas of Expertise</h3>
           <div className="grid md:grid-cols-2 gap-6">
-            {expertise.map((area, index) => (
+            {expertise.map((area: any, index: number) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
@@ -399,7 +320,7 @@ const About = () => {
                     <h4 className="text-xl font-bold mb-2">{area.title}</h4>
                     <p className="text-gray-400 text-sm mb-3">{area.description}</p>
                     <div className="flex flex-wrap gap-2">
-                      {area.skills.map((skill, i) => (
+                      {area.skills.map((skill: string, i: number) => (
                         <span
                           key={i}
                           className="px-3 py-1 text-xs rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30"
@@ -449,7 +370,7 @@ const About = () => {
               className="absolute left-[15px] top-0 w-0.5 bg-gradient-to-b from-blue-500 via-purple-500 to-pink-500 opacity-50"
             />
 
-            {education.map((edu, index) => (
+            {education.map((edu: any, index: number) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, x: -50 }}
@@ -555,26 +476,13 @@ const About = () => {
         >
           <h3 className="text-2xl font-bold mb-6 gradient-text">Key Highlights</h3>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="p-4 bg-yellow-500/10 rounded-lg border border-yellow-500/20 hover:bg-yellow-500/20 transition-all">
-              <div className="text-3xl mb-2">🏆</div>
-              <h4 className="font-bold mb-1">Smart India Hackathon 2023</h4>
-              <p className="text-sm text-gray-400">Selected for National Level</p>
-            </div>
-            <div className="p-4 bg-blue-500/10 rounded-lg border border-blue-500/20 hover:bg-blue-500/20 transition-all">
-              <div className="text-3xl mb-2">🥇</div>
-              <h4 className="font-bold mb-1">eYantra Innovation Challenge</h4>
-              <p className="text-sm text-gray-400">Best Implementation Award (National Finals)</p>
-            </div>
-            <div className="p-4 bg-purple-500/10 rounded-lg border border-purple-500/20 hover:bg-purple-500/20 transition-all">
-              <div className="text-3xl mb-2">📜</div>
-              <h4 className="font-bold mb-1">Patent Published</h4>
-              <p className="text-sm text-gray-400">AI-Driven Crime Detection System (Jan 2026)</p>
-            </div>
-            <div className="p-4 bg-green-500/10 rounded-lg border border-green-500/20 hover:bg-green-500/20 transition-all">
-              <div className="text-3xl mb-2">🎓</div>
-              <h4 className="font-bold mb-1">MITWPU Workathon</h4>
-              <p className="text-sm text-gray-400">Winner (University Finals)</p>
-            </div>
+            {content.highlights.map((h: any, i: number) => (
+              <div key={i} className={`p-4 ${h.bgColor} rounded-lg border ${h.borderColor} ${h.hoverColor} transition-all`}>
+                <div className="text-3xl mb-2">{h.emoji}</div>
+                <h4 className="font-bold mb-1">{h.title}</h4>
+                <p className="text-sm text-gray-400">{h.description}</p>
+              </div>
+            ))}
           </div>
         </motion.div>
       </div>

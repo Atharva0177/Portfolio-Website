@@ -2,7 +2,18 @@
 
 import { motion } from 'framer-motion'
 
-const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
+interface LoadingScreenProps {
+    onComplete: () => void
+    name?: string
+    suffix?: string
+    tagline?: string
+}
+
+const LoadingScreen = ({ onComplete, name = 'Atharva', suffix = '.dev', tagline = 'Building the future with code' }: LoadingScreenProps) => {
+    // Split name: first char is the big "A", rest revealed after
+    const firstChar = name.charAt(0)
+    const restChars = name.slice(1)
+
     return (
         <motion.div
             className="fixed inset-0 z-[100] flex items-center justify-center bg-gray-950"
@@ -38,14 +49,14 @@ const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
 
             {/* Main text animation container */}
             <div className="relative flex items-center justify-center">
-                {/* The "A" that morphs into "Atharva.dev" */}
+                {/* The big letter that morphs into full name */}
                 <motion.div
                     className="flex items-center overflow-hidden"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.3 }}
                 >
-                    {/* "A" letter — scales up first, then slides left */}
+                    {/* First letter — scales up first, then slides left */}
                     <motion.span
                         className="text-4xl md:text-7xl lg:text-9xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent inline-block"
                         initial={{ scale: 0.3, opacity: 0, filter: 'blur(10px)' }}
@@ -55,11 +66,11 @@ const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
                             ease: 'easeOut',
                         }}
                     >
-                        A
+                        {firstChar}
                     </motion.span>
 
-                    {/* "tharva" — revealed after "A" settles */}
-                    {'tharva'.split('').map((letter, i) => (
+                    {/* Rest of name — revealed after first letter settles */}
+                    {restChars.split('').map((letter, i) => (
                         <motion.span
                             key={`name-${i}`}
                             className="text-4xl md:text-7xl lg:text-9xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent inline-block"
@@ -80,8 +91,8 @@ const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
                         </motion.span>
                     ))}
 
-                    {/* ".dev" — appears with a different color accent */}
-                    {'.dev'.split('').map((letter, i) => (
+                    {/* Suffix — appears with a different color accent */}
+                    {suffix.split('').map((letter, i) => (
                         <motion.span
                             key={`dev-${i}`}
                             className="text-4xl md:text-7xl lg:text-9xl font-bold text-blue-400 inline-block"
@@ -135,7 +146,7 @@ const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
                     setTimeout(onComplete, 600)
                 }}
             >
-                Building the future with code
+                {tagline}
             </motion.p>
         </motion.div>
     )

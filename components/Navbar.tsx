@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import { FaBars, FaTimes } from 'react-icons/fa'
 import ThemeToggle from './ThemeToggle'
 
-const Navbar = () => {
+const Navbar = ({ brandName = 'Atharva.dev', isPreview = false }: { brandName?: string, isPreview?: boolean }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [activeSection, setActiveSection] = useState('home')
@@ -60,7 +60,7 @@ const Navbar = () => {
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'glass py-4' : 'bg-transparent py-6'
+      className={`${isPreview ? 'relative rounded-2xl w-full' : 'fixed w-full'} z-50 transition-all duration-300 ${scrolled || isPreview ? 'glass py-4' : 'bg-transparent py-6'
         }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -70,7 +70,7 @@ const Navbar = () => {
             whileHover={{ scale: 1.05 }}
             className="text-2xl font-bold gradient-text"
           >
-            Atharva.dev
+            {brandName}
           </motion.div>
 
           {/* Desktop Menu */}

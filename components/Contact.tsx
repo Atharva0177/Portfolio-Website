@@ -3,9 +3,25 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
-import { FaEnvelope, FaMapMarkerAlt, FaGithub, FaLinkedin, FaTwitter, FaInstagram } from 'react-icons/fa'
+import { FaGithub, FaLinkedin, FaEnvelope, FaMapMarkerAlt, FaPaperPlane, FaInstagram } from 'react-icons/fa'
 
-const Contact = () => {
+const ICON_MAP: Record<string, any> = {
+  FaGithub, FaLinkedin, FaEnvelope, FaMapMarkerAlt, FaInstagram
+}
+
+const SOCIAL_ICONS: Record<string, any> = {
+  github: FaGithub,
+  linkedin: FaLinkedin,
+  instagram: FaInstagram,
+}
+
+const SOCIAL_COLORS: Record<string, string> = {
+  github: 'hover:text-gray-400',
+  linkedin: 'hover:text-blue-400',
+  instagram: 'hover:text-pink-400',
+}
+
+const Contact = ({ content }: { content: any }) => {
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -29,7 +45,7 @@ const Contact = () => {
       // Submit directly to Web3Forms (works in browser, not blocked by Cloudflare)
       const form = event.currentTarget
       const formDataToSend = new FormData(form)
-      
+
       const response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
         body: formDataToSend
@@ -62,11 +78,16 @@ const Contact = () => {
     }))
   }
 
-  const contactInfo = [
-    { icon: FaEnvelope, label: 'Email', value: 'mandavkaratharva@gmail.com', link: 'mailto:mandavkaratharva@gmail.com' },
-    { icon: FaMapMarkerAlt, label: 'Location', value: 'Pune, India', link: null },
-    { icon: FaGithub, label: 'GitHub', value: '@Atharva0177', link: 'https://github.com/Atharva0177' },
-  ]
+  const contactInfo = content.contactInfo.map((info: any) => ({
+    ...info,
+    icon: ICON_MAP[info.icon] || FaEnvelope
+  }))
+
+  const socialLinks = content.socialLinks.map((social: any) => ({
+    ...social,
+    icon: SOCIAL_ICONS[social.platform] || FaGithub,
+    color: SOCIAL_COLORS[social.platform] || 'hover:text-gray-400'
+  }))
 
   return (
     <section id="contact" className="py-20 relative">
@@ -78,73 +99,77 @@ const Contact = () => {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Get In <span className="gradient-text">Touch</span>
+            {content.heading.split(' ')[0]} <span className="gradient-text">{content.heading.split(' ').slice(1).join(' ')}</span>
           </h2>
-          <p className="text-gray-400 text-lg">Let's work together on your next project</p>
+          <p className="text-gray-400 text-lg">{content.subtitle}</p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-12">
+        <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
           {/* Contact Info */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ delay: 0.2 }}
+            className="space-y-8"
           >
-            <h3 className="text-3xl font-bold mb-8 gradient-text">Let's Talk</h3>
-            <p className="text-gray-400 mb-8 text-lg">
-              I'm always open to discussing new projects, creative ideas, or opportunities 
-              to be part of your visions. Feel free to reach out!
-            </p>
+            <div>
+              <h3 className="text-2xl font-bold mb-4">Get in Touch</h3>
+              <p className="text-gray-400 leading-relaxed mb-8">
+                {content.description}
+              </p>
+            </div>
 
             <div className="space-y-6 mb-8">
-              {contactInfo.map((item, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={inView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ delay: 0.3 + index * 0.1 }}
-                  className="flex items-center gap-4"
-                >
-                  <div className="p-3 glass rounded-lg">
-                    <item.icon className="text-2xl text-blue-400" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-400">{item.label}</p>
-                    {item.link ? (
-                      <a
-                        href={item.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="font-semibold hover:text-blue-400 transition-colors"
-                      >
-                        {item.value}
-                      </a>
-                    ) : (
-                      <p className="font-semibold">{item.value}</p>
-                    )}
-                  </div>
-                </motion.div>
-              ))}
+              {contactInfo.map((info: any, index: number) => {
+                const Icon = info.icon
+                return (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={inView ? { opacity: 1, x: 0 } : {}}
+                    transition={{ delay: 0.3 + index * 0.1 }}
+                    className="flex items-center gap-4"
+                  >
+                    <div className="p-3 glass rounded-lg">
+                      <Icon className="text-2xl text-blue-400" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-400">{info.label}</p>
+                      {info.link ? (
+                        <a
+                          href={info.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-semibold hover:text-blue-400 transition-colors"
+                        >
+                          {info.value}
+                        </a>
+                      ) : (
+                        <p className="font-semibold">{info.value}</p>
+                      )}
+                    </div>
+                  </motion.div>
+                )
+              })}
             </div>
 
             <div className="flex gap-4">
-              {[
-                { icon: FaGithub, url: 'https://github.com/Atharva0177', color: 'hover:text-white' },
-                { icon: FaLinkedin, url: 'https://www.linkedin.com/in/atharva-mandavkar-b66b94179/', color: 'hover:text-sky-500' },
-                { icon: FaInstagram, url: 'https://www.instagram.com/atharva__177/', color: 'hover:text-pink-500' },
-              ].map((social, index) => (
-                <motion.a
-                  key={index}
-                  href={social.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  whileHover={{ scale: 1.2, rotate: 5 }}
-                  whileTap={{ scale: 0.9 }}
-                  className={`p-4 glass rounded-full text-white transition-colors ${social.color}`}
-                >
-                  <social.icon size={24} />
-                </motion.a>
-              ))}
+              {socialLinks.map((social: any, index: number) => {
+                const Icon = social.icon
+                return (
+                  <motion.a
+                    key={index}
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.2, rotate: 5 }}
+                    whileTap={{ scale: 0.9 }}
+                    className={`p-4 glass rounded-full text-white transition-colors ${social.color}`}
+                  >
+                    <Icon size={24} />
+                  </motion.a>
+                )
+              })}
             </div>
           </motion.div>
 
@@ -157,12 +182,12 @@ const Contact = () => {
           >
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Hidden field for Web3Forms access key */}
-              <input 
-                type="hidden" 
-                name="access_key" 
-                value={process.env.NEXT_PUBLIC_WEB3FORMS_KEY || ''} 
+              <input
+                type="hidden"
+                name="access_key"
+                value={process.env.NEXT_PUBLIC_WEB3FORMS_KEY || ''}
               />
-              
+
               <div>
                 <label className="block text-sm font-medium mb-2">Name</label>
                 <input
