@@ -19,8 +19,9 @@ const ParticleBackground = () => {
     const animationRef = useRef<number>(0)
     const dimensionsRef = useRef({ width: 0, height: 0 })
 
-    const PARTICLE_COUNT = 80
-    const CONNECTION_DISTANCE = 150
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+    const PARTICLE_COUNT = isMobile ? 30 : 80
+    const CONNECTION_DISTANCE = isMobile ? 100 : 150
     const MOUSE_RADIUS = 180
     const COLORS = [
         'rgba(59, 130, 246,',   // blue-500

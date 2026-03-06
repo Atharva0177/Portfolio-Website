@@ -47,7 +47,7 @@ const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
                 >
                     {/* "A" letter — scales up first, then slides left */}
                     <motion.span
-                        className="text-7xl md:text-9xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent inline-block"
+                        className="text-4xl md:text-7xl lg:text-9xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent inline-block"
                         initial={{ scale: 0.3, opacity: 0, filter: 'blur(10px)' }}
                         animate={{ scale: 1, opacity: 1, filter: 'blur(0px)' }}
                         transition={{
@@ -62,7 +62,7 @@ const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
                     {'tharva'.split('').map((letter, i) => (
                         <motion.span
                             key={`name-${i}`}
-                            className="text-7xl md:text-9xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent inline-block"
+                            className="text-4xl md:text-7xl lg:text-9xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent inline-block"
                             initial={{ opacity: 0, x: -20, filter: 'blur(8px)', width: 0 }}
                             animate={{
                                 opacity: 1,
@@ -84,7 +84,7 @@ const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
                     {'.dev'.split('').map((letter, i) => (
                         <motion.span
                             key={`dev-${i}`}
-                            className="text-7xl md:text-9xl font-bold text-blue-400 inline-block"
+                            className="text-4xl md:text-7xl lg:text-9xl font-bold text-blue-400 inline-block"
                             initial={{ opacity: 0, y: 20, filter: 'blur(8px)', width: 0 }}
                             animate={{
                                 opacity: 1,
