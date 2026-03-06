@@ -5,6 +5,54 @@ import { useInView } from 'react-intersection-observer'
 import Image from 'next/image'
 import { FaCode, FaRocket, FaUsers, FaAward, FaGraduationCap, FaTrophy, FaGithub, FaLinkedin, FaEnvelope, FaPhone, FaMapMarkerAlt, FaBriefcase, FaStar, FaFire } from 'react-icons/fa'
 
+import { useEffect, useState } from 'react'
+
+const AnimatedCounter = ({ value, duration = 2 }: { value: string; duration?: number }) => {
+  const [count, setCount] = useState('0')
+  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.5 })
+
+  useEffect(() => {
+    if (!inView) return
+
+    // Extract numbers and non-numbers (e.g., '10+' -> num: 10, suffix: '+', '8.85' -> num: 8.85)
+    const match = value.match(/([\d.]+)(.*)/)
+    if (!match) {
+      setCount(value)
+      return
+    }
+
+    const num = parseFloat(match[1])
+    const suffix = match[2] || ''
+    const isFloat = match[1].includes('.')
+    const decimals = isFloat ? match[1].split('.')[1].length : 0
+
+    let startTime: number
+    let animationFrame: number
+
+    const updateCount = (timestamp: number) => {
+      if (!startTime) startTime = timestamp
+      const progress = Math.min((timestamp - startTime) / (duration * 1000), 1)
+
+      // easeOutExpo
+      const easeProgress = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress)
+      const currentVal = num * easeProgress
+
+      setCount(currentVal.toFixed(decimals) + suffix)
+
+      if (progress < 1) {
+        animationFrame = requestAnimationFrame(updateCount)
+      } else {
+        setCount(value) // ensure exact final value
+      }
+    }
+
+    animationFrame = requestAnimationFrame(updateCount)
+    return () => cancelAnimationFrame(animationFrame)
+  }, [inView, value, duration])
+
+  return <span ref={ref}>{count}</span>
+}
+
 const About = () => {
   const [ref, inView] = useInView({
     triggerOnce: true,
@@ -116,7 +164,9 @@ const About = () => {
               className="glass p-6 rounded-xl text-center"
             >
               <stat.icon className={`text-4xl ${stat.color} mx-auto mb-4`} />
-              <div className="text-3xl font-bold mb-2">{stat.value}</div>
+              <div className="text-3xl font-bold mb-2">
+                <AnimatedCounter value={stat.value} />
+              </div>
               <div className="text-gray-400 text-sm">{stat.label}</div>
             </motion.div>
           ))}
@@ -147,7 +197,7 @@ const About = () => {
                 >
                   <div className="w-full h-full rounded-full bg-gray-900" />
                 </motion.div>
-                
+
                 {/* Profile Image */}
                 <div className="absolute inset-0 m-1">
                   <Image
@@ -269,36 +319,36 @@ const About = () => {
             <h3 className="text-3xl font-bold mb-6 gradient-text">Who I Am</h3>
             <div className="space-y-4 text-gray-300 leading-relaxed flex-grow">
               <p>
-                👋 Hi! I'm <span className="text-white font-semibold">Atharva Mandavkar</span>, 
-                a passionate Electronics and Communication Engineering student from 
-                <span className="text-blue-400"> MIT World Peace University, Pune</span>, 
+                👋 Hi! I'm <span className="text-white font-semibold">Atharva Mandavkar</span>,
+                a passionate Electronics and Communication Engineering student from
+                <span className="text-blue-400"> MIT World Peace University, Pune</span>,
                 graduating in March 2025.
               </p>
               <p>
-                🚀 I specialize in <span className="text-green-400 font-semibold">Machine Learning</span>, 
-                <span className="text-purple-400 font-semibold"> Computer Vision</span>, and 
-                <span className="text-yellow-400 font-semibold"> IoT Systems</span>. 
+                🚀 I specialize in <span className="text-green-400 font-semibold">Machine Learning</span>,
+                <span className="text-purple-400 font-semibold"> Computer Vision</span>, and
+                <span className="text-yellow-400 font-semibold"> IoT Systems</span>.
                 My journey has been driven by a desire to solve real-world problems using AI and embedded technologies.
               </p>
               <p>
-                🏆 I've had the privilege of winning multiple national hackathons including 
-                <span className="text-yellow-400 font-semibold"> Smart India Hackathon 2023</span> and 
-                <span className="text-blue-400 font-semibold"> eYantra Innovation Challenge 2023-24</span>, 
+                🏆 I've had the privilege of winning multiple national hackathons including
+                <span className="text-yellow-400 font-semibold"> Smart India Hackathon 2023</span> and
+                <span className="text-blue-400 font-semibold"> eYantra Innovation Challenge 2023-24</span>,
                 where our team won the Best Implementation Award at the National Finals.
               </p>
               <p>
-                🤖 Recently achieved a significant milestone with a <span className="text-purple-400 font-semibold">published patent</span> on 
-                <span className="text-cyan-400 font-semibold"> "AI-Driven Crime Detection using Existing CCTV Networks"</span> (Publication No: 03/2026). 
+                🤖 Recently achieved a significant milestone with a <span className="text-purple-400 font-semibold">published patent</span> on
+                <span className="text-cyan-400 font-semibold"> "AI-Driven Crime Detection using Existing CCTV Networks"</span> (Publication No: 03/2026).
                 The system leverages advanced machine learning and video transformers to enhance surveillance with real-time anomaly detection and intelligent alerting.
               </p>
               <p>
-              💡 My expertise lies in developing end-to-end AI-ML solutions—from training deep learning models 
-                using <span className="text-pink-400">PyTorch</span> and <span className="text-orange-400">YOLOv8</span> 
+                💡 My expertise lies in developing end-to-end AI-ML solutions—from training deep learning models
+                using <span className="text-pink-400">PyTorch</span> and <span className="text-orange-400">YOLOv8</span>
                 to deploying them on edge devices like Raspberry Pi and STM32 microcontrollers.
               </p>
               <p>
-                🎯 When I'm not coding, I'm exploring new technologies, participating in workshops, 
-                or contributing to innovative projects that make a difference. I believe in continuous 
+                🎯 When I'm not coding, I'm exploring new technologies, participating in workshops,
+                or contributing to innovative projects that make a difference. I believe in continuous
                 learning and pushing the boundaries of what's possible with technology.
               </p>
             </div>
@@ -306,14 +356,14 @@ const About = () => {
             {/* Contact Info - At Bottom */}
             <div className="mt-6 pt-6 border-t border-gray-300 dark:border-white/10">
               <div className="grid grid-cols-1 gap-3">
-                <a 
+                <a
                   href="mailto:mandavkaratharva@gmail.com"
                   className="flex items-center gap-3 text-sm p-3 bg-gray-100 dark:bg-white/5 rounded-lg border border-gray-300 dark:border-white/10 hover:bg-gray-200 dark:hover:bg-white/10 transition-colors group"
                 >
                   <FaEnvelope className="text-blue-400 text-lg flex-shrink-0" />
                   <span className="text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white truncate">mandavkaratharva@gmail.com</span>
                 </a>
-                <a 
+                <a
                   href="tel:+917972326112"
                   className="flex items-center gap-3 text-sm p-3 bg-gray-100 dark:bg-white/5 rounded-lg border border-gray-300 dark:border-white/10 hover:bg-gray-200 dark:hover:bg-white/10 transition-colors group"
                 >
@@ -374,8 +424,8 @@ const About = () => {
         >
           {/* Background decoration */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/5 rounded-full blur-3xl" />
-          
-          <motion.h3 
+
+          <motion.h3
             initial={{ opacity: 0, x: -20 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ delay: 0.75 }}
@@ -389,7 +439,7 @@ const About = () => {
             </motion.div>
             Educational Journey
           </motion.h3>
-          
+
           <div className="relative space-y-8">
             {/* Animated vertical line */}
             <motion.div
@@ -398,13 +448,13 @@ const About = () => {
               transition={{ duration: 1.5, delay: 0.8 }}
               className="absolute left-[15px] top-0 w-0.5 bg-gradient-to-b from-blue-500 via-purple-500 to-pink-500 opacity-50"
             />
-            
+
             {education.map((edu, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, x: -50 }}
                 animate={inView ? { opacity: 1, x: 0 } : {}}
-                transition={{ 
+                transition={{
                   delay: 0.9 + index * 0.2,
                   type: "spring",
                   stiffness: 100,
@@ -416,7 +466,7 @@ const About = () => {
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={inView ? { scale: 1 } : {}}
-                  transition={{ 
+                  transition={{
                     delay: 0.9 + index * 0.2,
                     type: "spring",
                     stiffness: 200,
@@ -425,14 +475,14 @@ const About = () => {
                   className="absolute left-0 top-4 z-10"
                 >
                   <motion.div
-                    animate={{ 
+                    animate={{
                       boxShadow: [
                         '0 0 0 0 rgba(59, 130, 246, 0.7)',
                         '0 0 0 10px rgba(59, 130, 246, 0)',
                         '0 0 0 0 rgba(59, 130, 246, 0)'
                       ]
                     }}
-                    transition={{ 
+                    transition={{
                       duration: 2,
                       repeat: Infinity,
                       repeatDelay: 1,
@@ -443,7 +493,7 @@ const About = () => {
                     <FaGraduationCap className="text-white text-xs" />
                   </motion.div>
                 </motion.div>
-                
+
                 {/* Education card with gradient border */}
                 <motion.div
                   whileHover={{ scale: 1.02, x: 5 }}
@@ -452,7 +502,7 @@ const About = () => {
                 >
                   <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm p-6 rounded-xl">
                     <div className="flex flex-wrap justify-between items-start gap-2 mb-3">
-                      <motion.h4 
+                      <motion.h4
                         initial={{ opacity: 0 }}
                         animate={inView ? { opacity: 1 } : {}}
                         transition={{ delay: 1 + index * 0.2 }}
@@ -460,7 +510,7 @@ const About = () => {
                       >
                         {edu.degree}
                       </motion.h4>
-                      <motion.span 
+                      <motion.span
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={inView ? { opacity: 1, scale: 1 } : {}}
                         transition={{ delay: 1.1 + index * 0.2 }}
@@ -469,8 +519,8 @@ const About = () => {
                         {edu.period}
                       </motion.span>
                     </div>
-                    
-                    <motion.p 
+
+                    <motion.p
                       initial={{ opacity: 0 }}
                       animate={inView ? { opacity: 1 } : {}}
                       transition={{ delay: 1.2 + index * 0.2 }}
@@ -479,8 +529,8 @@ const About = () => {
                       <FaMapMarkerAlt className="text-sm" />
                       {edu.institution}
                     </motion.p>
-                    
-                    <motion.div 
+
+                    <motion.div
                       initial={{ opacity: 0, y: 10 }}
                       animate={inView ? { opacity: 1, y: 0 } : {}}
                       transition={{ delay: 1.3 + index * 0.2 }}
@@ -522,8 +572,8 @@ const About = () => {
             </div>
             <div className="p-4 bg-green-500/10 rounded-lg border border-green-500/20 hover:bg-green-500/20 transition-all">
               <div className="text-3xl mb-2">🎓</div>
-              <h4 className="font-bold mb-1">AWS Academy Graduate</h4>
-              <p className="text-sm text-gray-400">Cloud Foundations Certified</p>
+              <h4 className="font-bold mb-1">MITWPU Workathon</h4>
+              <p className="text-sm text-gray-400">Winner (University Finals)</p>
             </div>
           </div>
         </motion.div>

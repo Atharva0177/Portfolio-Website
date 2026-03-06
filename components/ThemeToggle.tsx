@@ -13,9 +13,9 @@ const ThemeToggle = () => {
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
 
     const shouldBeDark = savedTheme === 'dark' || (!savedTheme && prefersDark)
-    
+
     setIsDark(shouldBeDark)
-    
+
     // Apply to HTML element
     if (shouldBeDark) {
       document.documentElement.classList.add('dark')
@@ -27,10 +27,10 @@ const ThemeToggle = () => {
   const toggleTheme = () => {
     const newTheme = !isDark
     setIsDark(newTheme)
-    
+
     // Save to localStorage
     localStorage.setItem('theme', newTheme ? 'dark' : 'light')
-    
+
     // Toggle dark class on HTML element
     if (newTheme) {
       document.documentElement.classList.add('dark')
