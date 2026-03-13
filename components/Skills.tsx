@@ -1,6 +1,7 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { useState, useEffect, useCallback } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import {
   FaPython,
@@ -77,6 +78,28 @@ const Skills = ({ content }: { content: any }) => {
   const skillCategories = content.categories
   const areasOfInterest = content.areasOfInterest
 
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [isHovered, setIsHovered] = useState(false)
+
+  const nextCategory = useCallback(() => {
+    setActiveIndex((prev: number) => (prev === skillCategories.length - 1 ? 0 : prev + 1))
+  }, [skillCategories.length])
+
+  const prevCategory = () => {
+    setActiveIndex((prev: number) => (prev === 0 ? skillCategories.length - 1 : prev - 1))
+  }
+
+  // Auto-scroll effect
+  useEffect(() => {
+    if (isHovered || skillCategories.length <= 1) return
+
+    const timer = setInterval(() => {
+      nextCategory()
+    }, 4000) // Change category every 4 seconds
+
+    return () => clearInterval(timer)
+  }, [isHovered, nextCategory, skillCategories.length])
+
   return (
     <section id="skills" className="py-20 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -92,44 +115,84 @@ const Skills = ({ content }: { content: any }) => {
           <p className="text-gray-400 text-lg">Technologies and tools I work with</p>
         </motion.div>
 
-        {/* Skill Categories */}
-        <div className="space-y-12">
-          {skillCategories.map((category: any, categoryIndex: number) => {
-            const CategoryIcon = CATEGORY_ICON_MAP[category.category] || FaCode
-            return (
-              <motion.div
-                key={categoryIndex}
-                initial={{ opacity: 0, y: 30 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: categoryIndex * 0.1 }}
+        {/* Skill Category Carousel */}
+        {skillCategories.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            className="w-full max-w-5xl mx-auto cursor-default"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+          >
+            {/* Navigation and Category Title */}
+            <div className="flex items-center justify-between mb-8">
+              <button 
+                onClick={prevCategory}
+                className="p-3 bg-gray-800/50 hover:bg-gray-700/80 rounded-full text-gray-300 transition-colors border border-gray-700"
               >
-                {/* Category Header */}
-                <div className="flex items-center gap-3 mb-6">
-                  <div className={`p-3 rounded-lg bg-gradient-to-r ${category.color}`}>
-                    <CategoryIcon className="text-2xl text-white" />
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+              </button>
+              
+              <div className="flex flex-col items-center">
+                <div className="flex items-center gap-3">
+                  <div className={`p-3 rounded-lg bg-gradient-to-r ${skillCategories[activeIndex].color}`}>
+                    {(() => {
+                      const CategoryIcon = CATEGORY_ICON_MAP[skillCategories[activeIndex].category] || FaCode
+                      return <CategoryIcon className="text-2xl text-white" />
+                    })()}
                   </div>
-                  <h3 className="text-2xl font-bold">{category.category}</h3>
+                  <h3 className="text-2xl font-bold">{skillCategories[activeIndex].category}</h3>
                 </div>
+                
+                {/* Dots indicator */}
+                <div className="flex gap-2 mt-4">
+                  {skillCategories.map((_: any, idx: number) => (
+                    <button 
+                      key={idx}
+                      onClick={() => setActiveIndex(idx)}
+                      className={`h-2 rounded-full transition-all duration-300 ${activeIndex === idx ? 'w-6 bg-blue-500' : 'w-2 bg-gray-600 hover:bg-gray-400'}`}
+                      aria-label={`Go to slide ${idx + 1}`}
+                    />
+                  ))}
+                </div>
+              </div>
 
-                {/* Skills Grid */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                  {category.skills.map((skill: any, skillIndex: number) => {
+              <button 
+                onClick={nextCategory}
+                className="p-3 bg-gray-800/50 hover:bg-gray-700/80 rounded-full text-gray-300 transition-colors border border-gray-700"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+              </button>
+            </div>
+
+            {/* Active Category Skills Grid */}
+            <div className="glass p-6 md:p-8 rounded-2xl relative min-h-[300px]">
+              <AnimatePresence mode="wait">
+                <motion.div 
+                  key={activeIndex}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3 }}
+                  className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
+                >
+                  {skillCategories[activeIndex].skills.map((skill: any, skillIndex: number) => {
                     const SkillIcon = SKILL_ICON_MAP[skill.name] || FaCode
                     return (
                       <motion.div
                         key={skillIndex}
                         initial={{ opacity: 0, scale: 0.8 }}
-                        animate={inView ? { opacity: 1, scale: 1 } : {}}
-                        transition={{ delay: categoryIndex * 0.1 + skillIndex * 0.05 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: skillIndex * 0.05 }}
                         whileHover={{ scale: 1.05, y: -5 }}
-                        className="glass p-4 rounded-xl text-center group cursor-pointer"
+                        className="bg-gray-900/40 border border-gray-800 p-4 rounded-xl text-center group cursor-pointer hover:border-gray-600 transition-colors"
                       >
                         <div
                           className="mb-3 flex justify-center transition-transform group-hover:scale-110"
                           style={{ color: skill.color }}
                         >
                           {skill.iconUrl ? (
-                            <img src={skill.iconUrl} alt={skill.name} className="w-10 h-10 object-contain" style={{ filter: `drop-shadow(0 0 2px ${skill.color})` }} />
+                            <img src={skill.iconUrl} alt={skill.name} className="w-10 h-10 object-contain" />
                           ) : (
                             <SkillIcon size={40} />
                           )}
@@ -140,11 +203,11 @@ const Skills = ({ content }: { content: any }) => {
                       </motion.div>
                     )
                   })}
-                </div>
-              </motion.div>
-            )
-          })}
-        </div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </motion.div>
+        )}
 
         {/* Areas of Interest */}
         <motion.div
