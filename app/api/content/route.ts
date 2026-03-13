@@ -28,9 +28,11 @@ export async function PUT(request: Request) {
 
     try {
         const content = await request.json()
-        saveContent(content)
+        await saveContent(content)
         return NextResponse.json({ success: true })
     } catch (error) {
-        return NextResponse.json({ error: 'Failed to save content' }, { status: 500 })
+        console.error('Failed to save content:', error)
+        const message = error instanceof Error ? error.message : 'Failed to save content'
+        return NextResponse.json({ error: message }, { status: 500 })
     }
 }

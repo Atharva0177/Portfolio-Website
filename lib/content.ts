@@ -129,6 +129,57 @@ export function getContent(): SiteContent {
     return JSON.parse(raw) as SiteContent
 }
 
-export function saveContent(content: SiteContent): void {
+/**
+ * Save content via GitHub API (works on Vercel's read-only filesystem).
+ * Falls back to local filesystem write for local development.
+ */
+export async function saveContent(content: SiteContent): Promise<void> {
+    const token = process.env.GITHUB_CONTENT_TOKEN
+    const repo = process.env.GITHUB_REPO
+    const branch = process.env.GITHUB_BRANCH || 'main'
+
+    // If GitHub env vars are configured, use GitHub API (required for Vercel)
+    if (token && repo) {
+        const filePath = 'data/content.json'
+        const apiUrl = `https://api.github.com/repos/${repo}/contents/${filePath}`
+        const headers = {
+            Authorization: `token ${token}`,
+            Accept: 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json',
+        }
+
+        // 1. Get the current file SHA (required for updates)
+        const getRes = await fetch(`${apiUrl}?ref=${branch}`, { headers })
+        if (!getRes.ok) {
+            const errBody = await getRes.text()
+            throw new Error(`GitHub API: Failed to get current file (${getRes.status}): ${errBody}`)
+        }
+        const fileData = await getRes.json()
+        const currentSha = fileData.sha
+
+        // 2. Update the file via PUT
+        const newContent = JSON.stringify(content, null, 2)
+        const base64Content = Buffer.from(newContent, 'utf-8').toString('base64')
+
+        const putRes = await fetch(apiUrl, {
+            method: 'PUT',
+            headers,
+            body: JSON.stringify({
+                message: 'Update content.json via Admin Panel',
+                content: base64Content,
+                sha: currentSha,
+                branch,
+            }),
+        })
+
+        if (!putRes.ok) {
+            const errBody = await putRes.text()
+            throw new Error(`GitHub API: Failed to update file (${putRes.status}): ${errBody}`)
+        }
+
+        return
+    }
+
+    // Fallback: local filesystem write (for local development)
     fs.writeFileSync(CONTENT_PATH, JSON.stringify(content, null, 2), 'utf-8')
 }
