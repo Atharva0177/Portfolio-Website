@@ -473,6 +473,7 @@ export default function AdminPage() {
     const [activeTab, setActiveTab] = useState<Tab>('site')
     const [saving, setSaving] = useState(false)
     const [saveStatus, setSaveStatus] = useState<'idle' | 'saved' | 'error'>('idle')
+    const [saveError, setSaveError] = useState('')
     const [loading, setLoading] = useState(false)
 
     const fetchContent = useCallback(async (token: string) => {
@@ -512,6 +513,7 @@ export default function AdminPage() {
         if (!content) return
         setSaving(true)
         setSaveStatus('idle')
+        setSaveError('')
         try {
             const res = await fetch('/api/content', {
                 method: 'PUT',
@@ -525,9 +527,12 @@ export default function AdminPage() {
                 setSaveStatus('saved')
                 setTimeout(() => setSaveStatus('idle'), 3000)
             } else {
+                const errData = await res.json().catch(() => ({ error: `HTTP ${res.status}` }))
+                setSaveError(errData.error || `HTTP ${res.status}`)
                 setSaveStatus('error')
             }
-        } catch {
+        } catch (e) {
+            setSaveError(e instanceof Error ? e.message : 'Network error')
             setSaveStatus('error')
         }
         setSaving(false)
@@ -607,7 +612,7 @@ export default function AdminPage() {
                         {saving ? 'Saving...' : '💾 Save Changes'}
                     </button>
                     {saveStatus === 'saved' && <p className="text-green-400 text-xs mt-2 text-center">✓ Saved successfully!</p>}
-                    {saveStatus === 'error' && <p className="text-red-400 text-xs mt-2 text-center">✕ Failed to save</p>}
+                    {saveStatus === 'error' && <p className="text-red-400 text-xs mt-2 text-center">✕ {saveError || 'Failed to save'}</p>}
                     <a href="/" target="_blank" rel="noopener noreferrer" className="block w-full py-2 mt-3 text-center text-gray-400 hover:text-white text-xs border border-gray-700 rounded-lg hover:border-gray-600 transition-colors">
                         🔗 Preview Site
                     </a>
