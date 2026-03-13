@@ -355,12 +355,20 @@
     },
     {
       "id": 1773412338668,
-      "title": "hey",
-      "description": "",
-      "image": "",
-      "tech": [],
-      "github": "",
-      "color": "from-blue-500 to-purple-600"
+      "title": "F1 Intelligence Hub",
+      "description": "F1 Intelligence Hub is an advanced, full-stack predictive and analytical platform explicitly engineered to harvest, store, and visualize official Formula 1 timing data, telemetry, and race control information. Built using FastF1, PostgreSQL, TimescaleDB, FastAPI, and Next.js 14, this platform processes high-frequency telemetry sequences into interactive, dynamic frontend visualizations.",
+      "image": "https://s3-newsifier.ams3.digitaloceanspaces.com/grandprix247.com/images/2025-11/formula-1-data.jpg",
+      "tech": [
+        "Python",
+        "FastF1 API",
+        "Next.js 14",
+        "TypeScript",
+        "TailwindCSS",
+        "Docker",
+        "PostgreSQL + TimescaleDB"
+      ],
+      "github": "https://github.com/Atharva0177/F1-IntelligenceHub",
+      "color": ""
     }
   ],
   "skills": {
